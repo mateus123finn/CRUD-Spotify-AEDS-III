@@ -1,4 +1,6 @@
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -11,7 +13,7 @@ public class FileHandler {
 
     public FileHandler() {
         this.Path = null;
-        this.ID = 0;
+        this.ID = -1;
     }
 
     public String parseTexto(String texto){
@@ -51,6 +53,8 @@ public class FileHandler {
             RandomAccessFile rd = new RandomAccessFile(this.Path,"rw");
             DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
+            rd.writeInt(0);
+
             long size_raw = raw.length();
             long size = 0;
 
@@ -58,6 +62,8 @@ public class FileHandler {
             while (sc.hasNext()) {
                 String[] aux = sc.nextLine().split("(,)(?=(?:[^\"]|\"[^\"]*\")*$)");
                 Musica ms = new Musica();
+
+                ID += 1;
 
                 ms.setID(ID);
                 ms.setNome(parseTexto(aux[0]));
@@ -74,8 +80,10 @@ public class FileHandler {
 
                 System.out.println("Carregando: "+((size * 1.0) / size_raw) * 100 + " %");
 
-                ID += 1;
+                
             }
+            rd.seek(0);
+            rd.writeInt(this.ID);
             status = true;
         } catch (Exception e){
             status = false;
@@ -85,8 +93,63 @@ public class FileHandler {
         return status;
     }
 
-    public void LoadMAT (String path){
-        this.Path = path;
+    public boolean LoadMAT (String path){
+        try {
+            RandomAccessFile test = new RandomAccessFile(path, "r");
+            this.Path = path;
+            this.ID = test.readInt();
+            return true;
+        } catch (Exception e) {
+            //create.close();
+            return false;
+        }
+    }
+
+    public boolean CreateMAT (String path){
+        if(!LoadMAT(path)){
+            try {
+                RandomAccessFile create = new RandomAccessFile(path, "rw");
+                this.Path = path;
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    public int AdicionaMusicaFile(Musica ms){
+
+        try{
+
+            RandomAccessFile rs = new RandomAccessFile(this.Path,"rw");
+            rs.seek(rs.length());
+
+            if(this.ID == -1){
+                rs.writeInt(0);
+            }
+
+            this.ID += 1;
+            ms.setID(this.ID);
+
+            byte[] stream = ms.DevolveBytes();
+
+            //System.out.println(stream.length);
+
+            rs.writeInt(stream.length);
+            rs.writeBoolean(false);
+            rs.write(stream);
+
+            rs.seek(0);
+            rs.writeInt(this.ID);
+            
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return this.ID;
     }
 
     public Musica getMusicaByID(int ID){
@@ -94,12 +157,13 @@ public class FileHandler {
         long PointerPos;
         try {
             RandomAccessFile rd = new RandomAccessFile(this.Path, "r");
-            PointerPos = rd.getFilePointer();
+            PointerPos = rd.getFilePointer() + 4;
+            rd.seek(PointerPos);
 
             while (true){
                 //System.out.println(PointerPos);
                 int Pos = rd.readInt();
-                //System.out.println(PointerPos);
+                //System.out.println(Pos);
                 if(!rd.readBoolean()){
                     int ID_busca = rd.readInt();
                     //System.out.println(ID_busca);
@@ -121,6 +185,44 @@ public class FileHandler {
             return null;
         }
         return ms;
+    }
+
+    public boolean DeletaMusicaById (int id){
+        long PointerPos;
+        try {
+            RandomAccessFile rd = new RandomAccessFile(this.Path, "rw");
+            PointerPos = rd.getFilePointer() + 4;
+            rd.seek(PointerPos);
+
+            while (true){
+                //System.out.println(PointerPos);
+                
+                int Pos = rd.readInt();
+                //System.out.println(Pos);
+                //System.out.println(PointerPos);
+                if(!rd.readBoolean()){
+                    int ID_busca = rd.readInt();
+                    //System.out.println(ID_busca);
+                    if(ID_busca == id){
+                        //System.out.println(PointerPos);
+                        rd.seek(PointerPos += 4);
+                        rd.writeBoolean(true);
+                        break;
+                    }
+                }
+                PointerPos += Pos + 5;
+                rd.seek(PointerPos);
+            }
+            
+            // ERRO - Sobreescreve o último elemento do arquivo
+            //rd.seek(0);
+            //rd.writeInt(this.ID);
+            return true;
+
+        } catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
     }
 
 }

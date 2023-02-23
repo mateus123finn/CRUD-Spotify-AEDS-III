@@ -1,5 +1,4 @@
 import java.io.*;
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Vector;
@@ -14,8 +13,8 @@ public class Musica {
     public Musica() {
     }
 
-    public Musica(int ID, String nome, Date data, String URL, Vector<String> cantores) {
-        this.ID = ID;
+    public Musica(String nome, Date data, String URL, Vector<String> cantores) {
+        //this.ID = ID;
         Nome = nome;
         Data = data;
         this.URL = URL;
@@ -68,7 +67,9 @@ public class Musica {
         for (int i = 0; i < lista.size()-1; i++) {
             output += lista.get(i) + "/j";
         }
-        output += lista.get(lista.size()-1);
+        if(lista.size() > 0){
+            output += lista.get(lista.size()-1);
+        }
         return output;
     }
 
