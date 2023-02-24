@@ -120,7 +120,7 @@ public class FileHandler {
         }
     }
 
-    public int AdicionaMusicaFile(Musica ms){
+    public int AdicionaMusicaFile(Musica ms, boolean opc){
 
         try{
 
@@ -131,8 +131,10 @@ public class FileHandler {
                 rs.writeInt(0);
             }
 
-            this.ID += 1;
-            ms.setID(this.ID);
+            if(!opc){
+                this.ID += 1;
+                ms.setID(this.ID);
+            }
 
             byte[] stream = ms.DevolveBytes();
 
@@ -185,6 +187,88 @@ public class FileHandler {
             return null;
         }
         return ms;
+    }
+
+    public boolean getPonteiroMusicaFile(int id, RandomAccessFile rd){
+        
+        try{
+            rd.seek(0);
+            long PointerPos = rd.getFilePointer() + 4;
+            rd.seek(PointerPos);
+
+                while (true){
+                    //System.out.println(PointerPos);
+                    int Pos = rd.readInt();
+                    //System.out.println(Pos);
+                    if(!rd.readBoolean()){
+                        int ID_busca = rd.readInt();
+                        //System.out.println(ID_busca);
+                        if(ID_busca == id){
+                            rd.seek(PointerPos);
+                            return true;
+                        }
+                    }
+                    PointerPos += Pos + 5;
+                    rd.seek(PointerPos);
+                }
+        } catch (Exception e){
+            return false;
+        }
+    }
+
+    public boolean updateMusica (Musica ms, int id){
+
+        Musica musica_old = this.getMusicaByID(id);
+
+        if(musica_old != null){
+
+            try {
+
+                RandomAccessFile rd = new RandomAccessFile(this.Path, "rw");
+
+                int tamanho_old;
+
+                //System.out.println(tamanho_old);
+                ms.setID(id);
+
+                byte[] raw_data = ms.DevolveBytes();
+
+                //System.out.println(raw_data.length);
+
+                //System.out.println(tamanho_old >= raw_data.length);
+
+                if (this.getPonteiroMusicaFile(id, rd)) {
+                    tamanho_old = rd.readInt();
+                } else {
+                    return false;
+                }
+
+                if (tamanho_old >= raw_data.length) {
+                        //rd.readInt();
+                    rd.readBoolean();
+                        
+                    rd.write(raw_data);
+
+                } else {
+
+                    this.DeletaMusicaById(id);
+                    this.AdicionaMusicaFile(ms, true);
+
+                }
+
+                rd.close();
+                return true;
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+
+        } else {
+            return false;
+        }
+
     }
 
     public boolean DeletaMusicaById (int id){

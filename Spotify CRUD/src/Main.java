@@ -17,14 +17,10 @@ public class Main {
         Musica m1 = new Musica("Teste", new Date(), "www.google.com", new Vector<String>());
         Musica m2 = new Musica("KAKAKA", new Date(), "www.youtube.com", new Vector<String>());
 
-        //fl.AdicionaMusicaFile(m1);
-        //fl.AdicionaMusicaFile(m2);
+        //fl.AdicionaMusicaFile(m1, false);
+        //fl.AdicionaMusicaFile(m2, false);
 
-        System.out.println(fl.getMusicaByID(0).getNome());
-
-        fl.DeletaMusicaById(3);
-
-        System.out.println(fl.getMusicaByID(3).getNome());
+        fl.updateMusica(m2, 0);
         
 
         //fl.LoadCSV("./BD/newSpotify.csv");
