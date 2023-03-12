@@ -3,3 +3,5 @@
 *.mat
 *.iml
 out
+*.class
+JARS

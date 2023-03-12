@@ -14,7 +14,6 @@ public class Musica {
     }
 
     public Musica(String nome, Date data, String URL, Vector<String> cantores) {
-        //this.ID = ID;
         Nome = nome;
         Data = data;
         this.URL = URL;
@@ -81,8 +80,6 @@ public class Musica {
     }
 
     public byte[] DevolveBytes() throws IOException {
-
-        //System.out.println(Nome);
 
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
         DataOutputStream data = new DataOutputStream(bout);

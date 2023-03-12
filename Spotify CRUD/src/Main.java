@@ -1,32 +1,9 @@
-import javax.swing.*;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Date;
-import java.util.Scanner;
-import java.util.Vector;
-import java.util.concurrent.TimeUnit;
-
 public class Main {
-    public static void main(String[] args) throws InterruptedException, IOException {
+    public static void main(String[] args){
 
-        FileHandler fl = new FileHandler();
+        Interface i = new Interface();
 
-        fl.CreateMAT("./FILES/teste.mat");
-
-        Musica m1 = new Musica("Teste", new Date(), "www.google.com", new Vector<String>());
-        Musica m2 = new Musica("KAKAKA", new Date(), "www.youtube.com", new Vector<String>());
-
-        //fl.AdicionaMusicaFile(m1, false);
-        //fl.AdicionaMusicaFile(m2, false);
-
-        fl.updateMusica(m2, 0);
-        
-
-        //fl.LoadCSV("./BD/newSpotify.csv");
-
-        //fl.LoadMAT("./FILES/newSpotify.mat");
-        //System.out.println(fl.getMusicaByID(779230).getNome());
+        i.Menu();
 
         /*
         //Carrega e Inicia o PopUp de Carregamento
