@@ -48,6 +48,7 @@ public class FileHandler {
         return removeEspaco(aux);
     }
 
+    //Recebe o caminho do Arquivo CSV e carrega seu conteúdo para um arquivo .MAT de mesmo nome
     public boolean LoadCSV (String path) {
         boolean status;
         try {
@@ -98,6 +99,7 @@ public class FileHandler {
         return status;
     }
 
+    // Recebe o caminho para um arquivo MAT e o abre.
     public boolean LoadMAT (String path){
         try {
             RandomAccessFile test = new RandomAccessFile("./FILES/"+path+".mat", "r");
@@ -109,6 +111,7 @@ public class FileHandler {
         }
     }
 
+    // Recebe o caminho para um arquivo MAT e tenta criar, se já existe, chama a função loadMat.
     public boolean CreateMAT (String path){
         if(!LoadMAT(path)){
             try {
@@ -124,6 +127,7 @@ public class FileHandler {
         }
     }
 
+    // Recebe uma instância de RandomAccessFile, lê um Registro de Música a partir da última leitura no arquivo e retorna a Música.
     public Musica getNextMusica(RandomAccessFile r) throws IOException, EOFException{
 
             long PointerPos = r.getFilePointer();
@@ -147,6 +151,7 @@ public class FileHandler {
             }
     }
 
+    // Recebe uma instância de Música e de RandomAccessFile e adciona a Música no final deste Arquivo.
     public void AdicionarMusicaFileInst(Musica ms, RandomAccessFile r){
         
         try{
@@ -167,6 +172,7 @@ public class FileHandler {
         }
     }
 
+    //Recebe uma Instância de Musica e a insere no final do arquivo, porém de acordo com o estado de OPC, o indice do arquivo não é atualizado.
     public int AdicionaMusicaFile(Musica ms, boolean opc){
 
         try{
@@ -199,6 +205,7 @@ public class FileHandler {
         return this.ID;
     }
 
+    //Recebe um ID e retorna a instância de Música com esse ID, senão NULL
     public Musica getMusicaByID(int ID){
         Musica ms;
         long PointerPos;
@@ -231,6 +238,7 @@ public class FileHandler {
         return ms;
     }
 
+    //Recebe o ID de uma Música e a Instância de RandomAccessFile, faz uma busca nese arquivo, e o retorna com o ponteiro no começo do Registro com esse ID.
     public boolean getPonteiroMusicaFile(int id, RandomAccessFile rd){
         
         try{
@@ -255,6 +263,7 @@ public class FileHandler {
         }
     }
 
+    // Recebe uma Instância de Música e um ID, faz uma busca com esse ID e substitui sua Posição no Arquivo.
     public boolean updateMusica (Musica ms, int id){
 
         Musica musica_old = this.getMusicaByID(id);
@@ -301,6 +310,7 @@ public class FileHandler {
 
     }
 
+    //Recebe o ID do Arquivo, faz uma busca e atualiza o estado do bit de deleção lógica.
     public boolean DeletaMusicaById (int id){
         long PointerPos;
         try {

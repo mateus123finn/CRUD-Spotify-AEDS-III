@@ -39,7 +39,7 @@ public class OrdenacaoHandler{
     }
 
 
-
+    //Chamada da Função para a Ordenação Balanceada
     public void Arrumar(int TamVetor, int QntArq){
 
         int arquivoFinal = -1;
@@ -65,7 +65,7 @@ public class OrdenacaoHandler{
         
 
     }
-
+    //Chamada da Função para a Seleção com Substituição
     public void ArrumarSubs(int TamVetor, int QntArq){
 
         int arquivoFinal = -1;
@@ -91,7 +91,7 @@ public class OrdenacaoHandler{
         
 
     }
-
+    //Chamada da Função para a Ordenação Balanceada com blocos de Tamanho Variável
     public void arrumarVari(int TamVetor, int QntArq){
         int arquivoFinal = -1;
 
@@ -115,6 +115,7 @@ public class OrdenacaoHandler{
         ApagarResto(files, arquivoFinal-1);
     }
 
+    //Recebe uma lista de RandomAccessFiles e um alvo, desliga suas instâncias e apaga seus arquivos, deixando somente o arquivo de alvo.
     private void ApagarResto(RandomAccessFile[] files, int target){
 
         try {
@@ -146,6 +147,7 @@ public class OrdenacaoHandler{
         }
     }
 
+    //Recebe o Tamanho do Vetor e uma lista de RandomAccessFiles e faz a distribuição dos valores para os arquivos.
     private void PrimeiraParte (int TamVetor, RandomAccessFile[] files){
 
         int PontArq = 0;
@@ -211,6 +213,8 @@ public class OrdenacaoHandler{
 
     }
 
+    //Recebe um array de Música e Retorna o índice de seu menor elemento
+
     private int getMenor(Musica[] Vetor){
 
         int Nmenor = this.MaiorN+1;
@@ -230,12 +234,13 @@ public class OrdenacaoHandler{
         return PosMenor;
     }
 
+    //Recebe um vetor de Música eo inicializa com NULL.
     private void inicializaVetor (Musica[] vetor){
         for (int i = 0; i < vetor.length; i++) {
             vetor[i] = null;
         }
     }
-
+    //Recebe o Tamanho do Vetor e uma lista de RandomAccessFiles e faz a redistribuição dos valores para os arquivos, com tamanhos variádos para o blocos.
     private int SegundaParteVari (RandomAccessFile[] files, int TamVetor){
         int QntArq = (files.length/2);
         int NmrArq = 0;
@@ -362,7 +367,7 @@ public class OrdenacaoHandler{
         }
     }
     
-
+//Recebe o Tamanho do Vetor e uma lista de RandomAccessFiles e faz a redistribuição dos valores para os arquivos, com tamanhos "fixos" para o blocos.
     private int SegundaParte(RandomAccessFile[] files, int TamVetor){
 
         int QntArq = (files.length/2);
